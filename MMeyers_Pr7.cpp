@@ -8,6 +8,7 @@ int readFromFile(vector<string>&, string);
 void displayArray(vector<string>, int);
 void alphaSort(vector<string>&, int);
 void swap(string&, string&);
+void saveFile(vector<string>, int, string);
 
 
 int main() {
@@ -25,15 +26,25 @@ int main() {
 	nameQty = readFromFile(names, fileName);
 
 	//Display unsorted names
-	cout << "The unsorted names are: " << endl;
+	cout << "Here are the unsorted names: " << endl;
+	cout << "----------------------------" << endl;
 	displayArray(names, nameQty);
+	cout << endl;
 
 	//Sort names into alphabetical order
 	alphaSort(names, nameQty);
 
 	//Display sorted names
-	cout << "The sorted names are: " << endl;
+	cout << "Here are the sorted names: " << endl;
+	cout << "--------------------------" << endl;
 	displayArray(names, nameQty);
+	cout << endl;
+
+	//Prompt for output file name and save file
+	string outputFilename;
+	cout << "Please enter the name of the file to save sorted names to: " << endl;
+	cin >> outputFilename;
+	saveFile(names, nameQty, outputFilename);
 
 	system("pause");
 	return 0;
@@ -57,17 +68,15 @@ int readFromFile(vector<string>& array, string fileName) {
 
 	else {
 		int index = 0;
-		while (inputFile) {
+		getline(inputFile, array[0]); //Fill first element
+		while (inputFile) { //Append subsequent names
 			string newName;
 			getline(inputFile, newName);
 			array.push_back(newName);
 			index++;
 		}
-		/* I shouldn't need the pop_back anymore
-		array.pop_back();
-		inputFile.close();
-		*/
-		return (index + 1);
+		
+		return (index); //Return number of names read to main()
 		}
 }
 
@@ -95,4 +104,21 @@ void swap(string &a, string &b) {
 	string temp = a;
 	a = b;
 	b = temp;
+}
+
+//Function to write names to a file
+void saveFile(vector<string> names, int qty, string fileName) {
+	
+	//Open output stream
+	ofstream outputFile;
+	outputFile.open(fileName);
+
+	//Write names to file
+	for (int i = 0; i < qty; i++) {
+		outputFile << names[i] << endl;
+	}
+
+	//Report success and close file
+	cout << "File successfully created" << endl;
+	outputFile.close();
 }
